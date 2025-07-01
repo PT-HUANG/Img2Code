@@ -1,0 +1,28 @@
+{
+  "name": "STA Projects Dev Container",
+  "image": "img2code-frontend:latest",
+	"workspaceFolder": "/workspaces/Img2Code",
+  "customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			"settings": {
+				"editor.tabSize": 2,
+				"editor.fontSize": 18,
+				"files.autoSave": "onWindowChange",
+				"editor.formatOnSave": true
+			},
+			"extensions": [
+				"dbaeumer.vscode-eslint", // ESLint
+				"anseki.vscode-color" // Color Picker
+			]
+		}
+	},
+  "portsAttributes": {
+		"3000": {
+			"label": "Hello Remote World",
+			"onAutoForward": "notify"
+		}
+	},
+  "postCreateCommand": "npm install",
+  "remoteUser": "node"
+}
