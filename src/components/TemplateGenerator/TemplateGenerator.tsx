@@ -6,15 +6,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea"
-
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function TemplateGenerator() {
-  const [uploadFiles, setUploadFiles] = useState("未選擇任何檔案")
+  const [uploadFiles, setUploadFiles] = useState("未選擇任何檔案");
   const [mode, setMode] = useState("背景");
   const [htmlTemplateValue, setHtmlTemplateValue] = useState("");
   const [CSSTemplateValue, setCSSTemplateValue] = useState("");
@@ -23,6 +27,7 @@ function TemplateGenerator() {
   const [isCopyCSSDisabled, setIsCopyCSSDisabled] = useState(true);
   const [messageHTML, setMessageHTML] = useState("");
   const [messageCSS, setMessageCSS] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleUploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -36,34 +41,34 @@ function TemplateGenerator() {
   };
 
   const handleGenerateHTML = (files: FileList) => {
-    const templateArray = Array(Object.keys(files).length)
+    const templateArray = Array(Object.keys(files).length);
     let loadedCount = 0;
 
     Array.from(files).forEach((file, index) => {
       const img = new Image();
       img.onload = () => {
         const className = file.name.split(".").slice(0, -1).join(".");
-        const formattedText = mode === "背景" ?
-          `<section class="bg ${className}">
+        const formattedText =
+          mode === "背景"
+            ? `<section class="bg ${className}">
     <div class="container relative">
           <img class="lazy" data-src="./images/BG/${file.name}" width="${img.width}" height="${img.height}" src="./images/BG/${file.name}">
     </div>
 </section>`
-          :
-          `<img class="lazy absolute ${className}" data-src="images/${file.name}" width="${img.width}" height="${img.height}" src="./images/${file.name}">`
+            : `<img class="lazy absolute ${className}" data-src="images/${file.name}" width="${img.width}" height="${img.height}" src="./images/${file.name}">`;
         templateArray[index] = formattedText;
         loadedCount++;
         if (loadedCount === files.length) {
           const result = templateArray.join("\n");
           setHtmlTemplateValue(result);
         }
-      }
+      };
       img.src = URL.createObjectURL(file);
     });
     if (mode === "元件") {
       setIsGenerateCSSDisabled(false);
     }
-  }
+  };
 
   const handleGenerateCSS = () => {
     const imagesArray = htmlTemplateValue.match(/<img[^>]+>/g);
@@ -94,7 +99,7 @@ function TemplateGenerator() {
     if (result) {
       setCSSTemplateValue(result.join("").trim());
     }
-  }
+  };
 
   const handleCopyHTML = async () => {
     try {
@@ -108,7 +113,7 @@ function TemplateGenerator() {
         setMessageHTML("");
       }, 1500);
     }
-  }
+  };
 
   const handleCopyCSS = async () => {
     try {
@@ -122,23 +127,34 @@ function TemplateGenerator() {
         setMessageCSS("");
       }, 1500);
     }
-  }
+  };
 
   return (
-    <div className="container w-[90%] h-[800px] max-w-7xl m-10 text-base">
+    <div className="container w-[90%] h-[800px] max-w-7xl m-10 mb:20 md:mb-0 text-base">
       <div className="text-2xl font-bold">模板產生區</div>
-      <div className="flex gap-2 items-center mt-6 mb-4">
-        <Label htmlFor="select_Template" className="text-lg">選擇模板：</Label>
-        <Select defaultValue="背景" onValueChange={(e) => {
-          setMode(e);
-          setUploadFiles("未選擇任何檔案");
-          setHtmlTemplateValue("");
-          setCSSTemplateValue("");
-          setIsCopyHTMLDisabled(true)
-          setIsGenerateCSSDisabled(true)
-          setIsCopyCSSDisabled(true)
-        }}>
-          <SelectTrigger className="w-[140px] border-zinc-500 rounded-sm" id="select_Template">
+      <div className="flex gap-2 items-center mt-6 mb-10">
+        <Label htmlFor="select_Template" className="text-lg">
+          選擇模板：
+        </Label>
+        <Select
+          defaultValue="背景"
+          onValueChange={(e) => {
+            setMode(e);
+            if (inputRef.current) {
+              inputRef.current.value = "";
+            }
+            setUploadFiles("未選擇任何檔案");
+            setHtmlTemplateValue("");
+            setCSSTemplateValue("");
+            setIsCopyHTMLDisabled(true);
+            setIsGenerateCSSDisabled(true);
+            setIsCopyCSSDisabled(true);
+          }}
+        >
+          <SelectTrigger
+            className="w-[140px] border-zinc-500 rounded-sm"
+            id="select_Template"
+          >
             <SelectValue placeholder="背景" />
           </SelectTrigger>
           <SelectContent>
@@ -147,12 +163,22 @@ function TemplateGenerator() {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex flex-col md:flex-row gap-30 md:gap-4 h-[80%]">
-        <div className="md:w-[45%]">
+      <div className="flex flex-col md:flex-row gap-10 md:gap-4 h-[90%]">
+        <div className="md:w-[45%] h-[100%]">
           <div className="flex items-center gap-3 mb-4">
-            <Label htmlFor="file-upload" className="w-fit px-4 py-3 justify-center bg-[#0dcaf0] hover:bg-[#07a1c1] duration-300 text-white font-bold rounded-md cursor-pointer ">
-              選擇檔案
-            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Label
+                  htmlFor="file-upload"
+                  className="w-fit px-4 py-3 justify-center bg-[#0dcaf0] hover:bg-[#07a1c1] duration-300 text-white font-bold rounded-md cursor-pointer "
+                >
+                  選擇檔案
+                </Label>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>上傳圖片</p>
+              </TooltipContent>
+            </Tooltip>
             <span className="text-sm">{uploadFiles}</span>
             <Input
               id="file-upload"
@@ -161,28 +187,54 @@ function TemplateGenerator() {
               multiple
               className="hidden"
               onChange={handleUploadFiles}
+              ref={inputRef}
             />
           </div>
           <div className="flex items-center gap-3 mb-4 ml-2">
             <div>HTML結構</div>
-            <Button className="cursor-pointer bg-green-500 hover:bg-green-600 font-bold" onClick={handleCopyHTML} disabled={isCopyHTMLDisabled}>複製HTML</Button>
+            <Button
+              className="cursor-pointer bg-green-500 hover:bg-green-600 font-bold"
+              onClick={handleCopyHTML}
+              disabled={isCopyHTMLDisabled}
+            >
+              複製HTML
+            </Button>
             <div className="font-bold">{messageHTML}</div>
           </div>
-          <Textarea value={htmlTemplateValue} onChange={(e) => setHtmlTemplateValue(e.target.value)} className="min-h-[70%] max-h-[500px] border-zinc-500 rounded-sm"></Textarea>
+          <Textarea
+            value={htmlTemplateValue}
+            onChange={(e) => setHtmlTemplateValue(e.target.value)}
+            className="min-h-[70%] max-h-[450px] border-zinc-500 rounded-sm"
+          ></Textarea>
         </div>
-        <div className="md:w-[45%]">
-          <Button className="cursor-pointer bg-pink-500 hover:bg-pink-600 font-bold" onClick={handleGenerateCSS} disabled={mode === "背景" || isGenerateCSSDisabled}>產生CSS</Button>
+        <div className="md:w-[45%] h-[100%]">
+          <Button
+            className="cursor-pointer bg-pink-500 hover:bg-pink-600 font-bold"
+            onClick={handleGenerateCSS}
+            disabled={mode === "背景" || isGenerateCSSDisabled}
+          >
+            產生CSS
+          </Button>
           <div className="flex items-center gap-5 my-4 ml-2">
             <div>CSS樣式</div>
-            <Button className="cursor-pointer bg-amber-500 hover:bg-amber-600 font-bold" disabled={CSSTemplateValue === "" && isCopyCSSDisabled} onClick={handleCopyCSS}>複製CSS</Button>
+            <Button
+              className="cursor-pointer bg-amber-500 hover:bg-amber-600 font-bold"
+              disabled={CSSTemplateValue === "" && isCopyCSSDisabled}
+              onClick={handleCopyCSS}
+            >
+              複製CSS
+            </Button>
             <div className="font-bold">{messageCSS}</div>
           </div>
-          <Textarea value={CSSTemplateValue} onChange={(e) => setCSSTemplateValue(e.target.value)} className="min-h-[70%] max-h-[500px] border-zinc-500 rounded-sm"></Textarea>
+          <Textarea
+            value={CSSTemplateValue}
+            onChange={(e) => setCSSTemplateValue(e.target.value)}
+            className="min-h-[70%] max-h-[450px] border-zinc-500 rounded-sm"
+          ></Textarea>
         </div>
       </div>
-    </div >
-  )
+    </div>
+  );
 }
 
 export default TemplateGenerator;
-

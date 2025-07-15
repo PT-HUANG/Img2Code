@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/workspaces/Img2Code
-      - /workspaces/Img2Code/node_modules
+      # - /workspaces/Img2Code/node_modules
     ports:
       - "3000:3000"
     command: npm run dev

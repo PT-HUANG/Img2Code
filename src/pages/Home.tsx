@@ -1,9 +1,11 @@
-import { TemplateGenerator } from '../components';
+import { TemplateGenerator } from '@/components';
+import { FileRenamer } from '@/components';
 
-function Home () {
+function Home() {
   return (
     <>
       <TemplateGenerator />
+      <FileRenamer />
     </>
   );
 }
