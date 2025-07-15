@@ -3,7 +3,7 @@
 這是一個前端介面工具，提供使用者快速重命名圖片檔案，並根據圖片清單自動產出對應的 HTML / CSS 模板程式碼。  
 適合用於網頁切版、Banner 製作、批次命名等場景。
 
-👉 開始使用 [https://pt-huang.github.io/img2code/](https://pt-huang.github.io/img2code/)
+👉 開始使用 [https://pt-huang.github.io/Img2Code/](https://pt-huang.github.io/Img2Code/)
 
 ---
 
