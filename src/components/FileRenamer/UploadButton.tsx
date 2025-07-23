@@ -43,9 +43,8 @@ function UploadButton({ setFilteredFiles }: setFilteredFilesType) {
         onChange={handleUploadFiles}
       />
       <div
-        className={`${
-          files.length === 0 ? "text-gray-500" : ""
-        } text-sm font-bold`}
+        className={`${files.length === 0 ? "text-gray-500" : ""
+          } text-sm font-bold`}
       >
         {files.length === 0 ? "未選擇任何檔案" : `${files?.length} 個檔案`}
       </div>

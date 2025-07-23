@@ -130,7 +130,7 @@ function TemplateGenerator() {
   };
 
   return (
-    <div className="container w-[90%] h-[800px] max-w-7xl m-10 mb:20 md:mb-0 text-base">
+    <div className="container w-[90%] h-full min-h-[800px] max-w-7xl mx-auto my-10 text-base">
       <div className="text-2xl font-bold">模板產生區</div>
       <div className="flex gap-2 items-center mt-6 mb-10">
         <Label htmlFor="select_Template" className="text-lg">
@@ -204,7 +204,7 @@ function TemplateGenerator() {
           <Textarea
             value={htmlTemplateValue}
             onChange={(e) => setHtmlTemplateValue(e.target.value)}
-            className="min-h-[70%] max-h-[450px] border-zinc-500 rounded-sm"
+            className="h-[70%] h-[250px] lg:h-[600px] border-zinc-500 rounded-sm"
           ></Textarea>
         </div>
         <div className="md:w-[45%] h-[100%]">
@@ -229,7 +229,7 @@ function TemplateGenerator() {
           <Textarea
             value={CSSTemplateValue}
             onChange={(e) => setCSSTemplateValue(e.target.value)}
-            className="min-h-[70%] max-h-[450px] border-zinc-500 rounded-sm"
+            className="h-[70%] h-[250px] lg:h-[600px] border-zinc-500 rounded-sm"
           ></Textarea>
         </div>
       </div>

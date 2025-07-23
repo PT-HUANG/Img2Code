@@ -26,6 +26,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
+import { restrictToParentElement } from "@dnd-kit/modifiers";
+
 import type { DragEndEvent } from "@dnd-kit/core";
 
 function FileRenamer() {
@@ -70,26 +72,29 @@ function FileRenamer() {
   }, [files, filterMode]);
 
   return (
-    <div className="container w-[90%] max-w-5xl m-10 mt-20 md:mt-0 text-base">
+    <div className="container w-[90%] max-w-7xl min-h-[850px] mx-auto my-10 text-base">
       <div className="text-2xl font-bold">重新命名區</div>
-      <div className="flex flex-col md:flex-row gap-4 h-[90%] mt-5">
+      <div className="flex flex-col md:flex-row h-[90%] mt-5">
         <RuleSelector />
-        <div className="w-[80%] border border-gray-100 mt-4 rounded-md bg-gray-100 md:h-[100%]">
-          <div className="flex flex-wrap items-center lg:justify-center gap-3 m-3 mb-4">
+        <div className="w-full xl:max-w-[800px] md:min-h-[275px] md:h-[100%] mt-2 md:mt-4 px-6 md:pb-8 border border-gray-100 rounded-md bg-gray-100">
+          <div className="w-[80%] flex flex-wrap items-center lg:justify-between min-[1180px] my-4 mx-auto">
             <UploadButton setFilteredFiles={setFilteredFiles} />
-            <CheckAllButton />
-            <FilterButton
-              filterMode={filterMode}
-              setFilterMode={setFilterMode}
-            />
-            <RenameButton />
-            <DownloadButton filteredFiles={filteredFiles} />
+            <div className="flex flex-wrap items-center gap-3">
+              <CheckAllButton />
+              <FilterButton
+                filterMode={filterMode}
+                setFilterMode={setFilterMode}
+              />
+              <RenameButton />
+              <DownloadButton filteredFiles={filteredFiles} />
+            </div>
           </div>
-          <div className="mx-auto flex flex-col items-start">
+          <div className="mx-auto w-full lg:w-[90%] flex flex-col items-start">
             <DndContext
               onDragEnd={handleDragEnd}
               collisionDetection={closestCenter}
               sensors={sensors}
+              modifiers={[restrictToParentElement]}
             >
               <SortableContext
                 items={filteredFiles}

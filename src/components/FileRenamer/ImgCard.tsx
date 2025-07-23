@@ -59,7 +59,7 @@ function ImgCard({ file, id, isChecked }: ImgCardProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-start gap-2 group w-[90%] max-w-[400px] md:max-w-[600px] ml-6 my-1 lg:mx-10 lg:mx-auto"
+      className="w-full flex items-start gap-2 group my-1"
     >
       <Checkbox
         checked={isChecked}
